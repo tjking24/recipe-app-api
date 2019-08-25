@@ -51,3 +51,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
             # if detail view is called
             return serializers.RecipeDetailSerializer
         return self.serializer_class
+
+    def perform_create(self, serializer):
+        # model.viewset knows out of the box for to create object
+        # just need to assign the user with the assgined authenticated user
+        """Create a new recipe"""
+        serializer.save(user=self.request.user)

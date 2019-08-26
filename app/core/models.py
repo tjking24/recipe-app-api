@@ -1,7 +1,19 @@
+import uuid
+import os
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
                                         PermissionsMixin
 from django.conf import settings
+
+
+def recipe_image_file_path(instance, filename):
+    """Generate file path for new recipe image"""
+    ext = filename.split('.')[-1]
+    # extracting the file extension e.g. jpg
+    filename = f'{uuid.uuid4()}.{ext}'
+    # generating a uuid and adding file ext
+
+    return os.path.join('uploads/recipe/', filename)
 
 
 class UserManager(BaseUserManager):
@@ -81,6 +93,8 @@ class Recipe(models.Model):
     tags = models.ManyToManyField('Tag')
     # name the model class in '' so doesnt matter
     # what order the models are listed
+    image = models.ImageField(null=True, upload_to=recipe_image_file_path)
+    # pass the recipe image function but dont call it, passing a reference
 
     def __str__(self):
         return self.title
